@@ -16,17 +16,17 @@ import { dispatchAgentDelegated } from '../../../../../app/livechat/server/lib/H
 import notifications from '../../../../../app/notifications/server/lib/Notifications';
 
 export const getMaxNumberSimultaneousChat = ({ agentId, departmentId }) => {
-	if (agentId) {
-		const user = Users.getAgentInfo(agentId);
-		const { livechat: { maxNumberSimultaneousChat } = {} } = user || {};
+	if (departmentId) {
+		const department = LivechatDepartment.findOneById(departmentId);
+		const { maxNumberSimultaneousChat } = department || {};
 		if (maxNumberSimultaneousChat > 0) {
 			return maxNumberSimultaneousChat;
 		}
 	}
 
-	if (departmentId) {
-		const department = LivechatDepartment.findOneById(departmentId);
-		const { maxNumberSimultaneousChat } = department || {};
+	if (agentId) {
+		const user = Users.getAgentInfo(agentId);
+		const { livechat: { maxNumberSimultaneousChat } = {} } = user || {};
 		if (maxNumberSimultaneousChat > 0) {
 			return maxNumberSimultaneousChat;
 		}
@@ -124,7 +124,7 @@ export const processWaitingQueue = async (department) => {
 };
 
 export const setPredictedVisitorAbandonmentTime = (room) => {
-	if (!room.v || !room.v.lastMessageTs || !settings.get('Livechat_abandoned_rooms_action') || settings.get('Livechat_abandoned_rooms_action') === 'none') {
+	if (!room.v || !settings.get('Livechat_abandoned_rooms_action') || settings.get('Livechat_abandoned_rooms_action') === 'none') {
 		return;
 	}
 
@@ -139,7 +139,7 @@ export const setPredictedVisitorAbandonmentTime = (room) => {
 		return;
 	}
 
-	const willBeAbandonedAt = moment(room.v.lastMessageTs).add(Number(secondsToAdd), 'seconds').toDate();
+	const willBeAbandonedAt = moment(room.v.lastMessageTs ?? room.lastMessage.ts).add(Number(secondsToAdd), 'seconds').toDate();
 	LivechatRooms.setPredictedVisitorAbandonment(room._id, willBeAbandonedAt);
 };
 
@@ -215,7 +215,7 @@ export const getLivechatQueueInfo = async (room) => {
 		return null;
 	}
 
-	const { _id: rid } = room;
+	const { _id: rid, departmentId: department } = room;
 	const inquiry = LivechatInquiry.findOneByRoomId(rid, { fields: { _id: 1, status: 1 } });
 	if (!inquiry) {
 		return null;
@@ -226,7 +226,7 @@ export const getLivechatQueueInfo = async (room) => {
 		return null;
 	}
 
-	const [inq] = await LivechatInquiry.getCurrentSortedQueueAsync({ _id });
+	const [inq] = await LivechatInquiry.getCurrentSortedQueueAsync({ _id, department });
 
 	if (!inq) {
 		return null;
