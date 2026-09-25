@@ -10415,7 +10415,7 @@ __metadata:
     fflate: "npm:^0.8.3"
     file-type: "npm:^16.5.4"
     filenamify: "npm:^4.3.0"
-    filesize: "npm:9.0.11"
+    filesize: "npm:11.0.24"
     generate-password: "npm:^1.7.1"
     google-libphonenumber: "npm:^3.2.46"
     gravatar: "npm:^1.8.2"
@@ -23411,10 +23411,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"filesize@npm:9.0.11":
-  version: 9.0.11
-  resolution: "filesize@npm:9.0.11"
-  checksum: 10/629c4dcf064c8bd049a4cf10c45431e19259a744def731ec437cfa0f783485f98aac7198dfeb3231d87e8fe9e6cce27503ffafa118072e9bcf9e75b063436c3c
+"filesize@npm:11.0.24":
+  version: 11.0.24
+  resolution: "filesize@npm:11.0.24"
+  checksum: 10/63bfa0017868fddcb03870cde5d27c0a64bd7cf9e31bb098928b01aad282e37f45758cfd2a56dd21586e4cd0586dfa7652d4eedc319fe2da69752b2e8867ca46
   languageName: node
   linkType: hard
 
